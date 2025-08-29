@@ -1,0 +1,26 @@
+---
+import { getEntryBySlug } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+import { WORK } from "@consts";
+
+const awardEntry = await getEntryBySlug("awards", "index");
+if (!awardEntry) {
+  throw new Error("awards/index.mdx not found.");
+}
+
+const { Content: AwardContent } = await awardEntry.render();
+---
+
+<PageLayout title={WORK.TITLE} description={WORK.DESCRIPTION}>
+  <Container>
+    <div class="space-y-10">
+      <div class="animate font-semibold text-black dark:text-white">
+        Awards
+      </div>
+      <article class="prose dark:prose-invert animate">
+        <AwardContent />
+      </article>
+    </div>
+  </Container>
+</PageLayout>
