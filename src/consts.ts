@@ -37,6 +37,10 @@ export const SOCIALS: Socials = [
     NAME: "GitHub",
     HREF: "https://github.com/rice8y"
   },
+  {
+    NAME: "Gist",
+    HREF: "https://gist.github.com/rice8y"
+  },
   { 
     NAME: "LinkedIn",
     HREF: "https://www.linkedin.com/in/eito-yoneyama-8929b0323",
