@@ -52,10 +52,20 @@ const { Content: AwardContent } = await awardEntry.render();
               {"/"}
             </li>
           ))}
-          <li class="line-clamp-1">
-            <Link href={`mailto:${SITE.EMAIL}`} aria-label={`Email ${SITE.NAME}`}>
+          <li class="line-clamp-1 select-none">
+            <a
+              aria-label={`Email ${SITE.NAME}`}
+              on:click={(e) => {
+                e.preventDefault();
+                // JavaScriptでmailtoリンクを生成
+                const email = SITE.EMAIL;
+                window.location.href = `mailto:${email}`;
+              }}
+              on:contextmenu={(e) => e.preventDefault()}
+              on:copy={(e) => e.preventDefault()}
+            >
               {SITE.EMAIL}
-            </Link>
+            </a>
           </li>
         </ul>
       </section>
