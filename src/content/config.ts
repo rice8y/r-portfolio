@@ -28,8 +28,15 @@ const projects = defineCollection({
     date: z.coerce.date(),
     draft: z.boolean().optional(),
     demoURL: z.string().optional(),
-    repoURL: z.string().optional()
+    repoURL: z.string().optional(),
   }),
 });
 
-export const collections = { blog, work, projects };
+const news = {
+  type: "content",
+  schema: z.object({
+    date: z.coerce.date().optional(),
+  }),
+};
+
+export const collections = { blog, work, projects, news };

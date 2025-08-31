@@ -1,26 +1,28 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, getEntryBySlug } from "astro:content";
 import Container from "@components/Container.astro";
 import PageLayout from "@layouts/PageLayout.astro";
 import ArrowCard from "@components/ArrowCard.astro";
 import Link from "@components/Link.astro";
-import { dateRange } from "@lib/utils";
 import { SITE, HOME, SOCIALS } from "@consts";
-import { getEntryBySlug } from "astro:content";
+import { dateRange } from "@lib/utils";
 
 const blog = (await getCollection("blog"))
   .filter(post => !post.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0,SITE.NUM_POSTS_ON_HOMEPAGE);
+  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
 
 const projects = (await getCollection("projects"))
   .filter(project => !project.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0,SITE.NUM_PROJECTS_ON_HOMEPAGE);
+  .slice(0, SITE.NUM_PROJECTS_ON_HOMEPAGE);
 
 const awardEntry = await getEntryBySlug("awards", "index");
 const { Content: AwardContent } = await awardEntry.render();
 
+const newsEntry = await getEntryBySlug("news", "index");
+const { Content: NewsContent } = await newsEntry.render();
+const newsDate = newsEntry.data.date;
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
@@ -29,6 +31,7 @@ const { Content: AwardContent } = await awardEntry.render();
       About me
     </h4>
     <div class="space-y-16">
+      <!-- About -->
       <section>
         <article class="space-y-4">
           <p class="animate">
@@ -39,37 +42,29 @@ const { Content: AwardContent } = await awardEntry.render();
         </article>
       </section>
 
+      <!-- News -->
       <section class="animate space-y-4">
         <h5 class="font-semibold text-black dark:text-white">
-          Contact
+          News
         </h5>
-        <ul class="flex flex-wrap gap-2">
-          {SOCIALS.map(SOCIAL => (
-            <li class="flex gap-x-2 text-nowrap">
-              <Link href={SOCIAL.HREF} external aria-label={`${SITE.NAME} on ${SOCIAL.NAME}`}>
-                {SOCIAL.NAME}
-              </Link>
-              {"/"}
-            </li>
-          ))}
-          <li class="line-clamp-1 select-none">
-            <a
-              aria-label={`Email ${SITE.NAME}`}
-              on:click={(e) => {
-                e.preventDefault();
-                // JavaScriptでmailtoリンクを生成
-                const email = SITE.EMAIL;
-                window.location.href = `mailto:${email}`;
-              }}
-              on:contextmenu={(e) => e.preventDefault()}
-              on:copy={(e) => e.preventDefault()}
-            >
-              {SITE.EMAIL}
-            </a>
-          </li>
-        </ul>
+        <div class="p-4 rounded-xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 shadow-sm">
+          <div class="flex items-start gap-3">
+            <div class="mt-1 text-gray-400 dark:text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8z" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{newsDate}</p>
+              <div class="mt-0.5 text-base text-black dark:text-white prose dark:prose-invert">
+                <NewsContent />
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
+      <!-- Latest posts -->
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
           <h5 class="font-semibold text-black dark:text-white">
@@ -88,6 +83,7 @@ const { Content: AwardContent } = await awardEntry.render();
         </ul>
       </section>
 
+      <!-- Recent projects -->
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
           <h5 class="font-semibold text-black dark:text-white">
@@ -106,6 +102,7 @@ const { Content: AwardContent } = await awardEntry.render();
         </ul>
       </section>
 
+      <!-- Awards -->
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
           <h5 class="font-semibold text-black dark:text-white">
@@ -115,6 +112,37 @@ const { Content: AwardContent } = await awardEntry.render();
         <article class="prose dark:prose-invert">
           <AwardContent />
         </article>
+      </section>
+
+      <!-- Contact -->
+      <section class="animate space-y-4">
+        <h5 class="font-semibold text-black dark:text-white">
+          Contact
+        </h5>
+        <ul class="flex flex-wrap gap-2">
+          {SOCIALS.map(SOCIAL => (
+            <li class="flex gap-x-2 text-nowrap">
+              <Link href={SOCIAL.HREF} external aria-label={`${SITE.NAME} on ${SOCIAL.NAME}`}>
+                {SOCIAL.NAME}
+              </Link>
+              {"/"}
+            </li>
+          ))}
+          <li class="line-clamp-1 select-none">
+            <a
+              aria-label={`Email ${SITE.NAME}`}
+              on:click={(e) => {
+                e.preventDefault();
+                const email = SITE.EMAIL;
+                window.location.href = `mailto:${email}`;
+              }}
+              on:contextmenu={(e) => e.preventDefault()}
+              on:copy={(e) => e.preventDefault()}
+            >
+              {SITE.EMAIL}
+            </a>
+          </li>
+        </ul>
       </section>
     </div>
   </Container>
