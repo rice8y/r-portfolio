@@ -6,6 +6,7 @@ export const SITE: Site = {
   NUM_POSTS_ON_HOMEPAGE: 3,
   NUM_WORKS_ON_HOMEPAGE: 2,
   NUM_PROJECTS_ON_HOMEPAGE: 3,
+  NUM_FAVORITES_ON_HOMEPAGE: 2,
 };
 
 export const HOME: Metadata = {
@@ -26,6 +27,11 @@ export const WORK: Metadata = {
 export const PROJECTS: Metadata = {
   TITLE: "Projects",
   DESCRIPTION: "A collection of my projects, with links to repositories and demos.",
+};
+
+export const FAVORITES: Metadata = {
+  TITLE: "Favorites",
+  DESCRIPTION: "A collection of my favorites.",
 };
 
 export const SOCIALS: Socials = [
