@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import FormattedDate from "@components/FormattedDate.astro";
 
 type Props = {
   entry: CollectionEntry<"blog"> | CollectionEntry<"projects">;
@@ -12,6 +13,15 @@ const { entry } = Astro.props;
   <div class="flex flex-col flex-1 truncate">
     <div class="font-semibold">
       {entry.data.title}
+    </div>
+    <div class="text-xs flex items-center gap-1.5 opacity-70 my-1">
+      <FormattedDate date={entry.data.date} />
+      {entry.data.updatedDate && (
+        <>
+          <span>&bull;</span>
+          <span>Updated: <FormattedDate date={entry.data.updatedDate} /></span>
+        </>
+      )}
     </div>
     <div class="text-sm">
       {entry.data.description}
