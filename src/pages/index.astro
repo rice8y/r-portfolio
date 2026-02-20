@@ -9,7 +9,7 @@ import { dateRange } from "@lib/utils";
 
 const blog = (await getCollection("blog"))
   .filter(post => !post.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf())
   .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE);
 
 const projects = (await getCollection("projects"))
@@ -19,7 +19,7 @@ const projects = (await getCollection("projects"))
 
 const favorites = (await getCollection("favorites"))
   .filter(favorite => !favorite.data.draft)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf())
   .slice(0, SITE.NUM_PROJECTS_ON_HOMEPAGE);
 
 const awardEntry = await getEntryBySlug("awards", "index");
@@ -27,7 +27,7 @@ const { Content: AwardContent } = await awardEntry.render();
 
 const newsEntry = await getEntryBySlug("news", "index");
 const { Content: NewsContent } = await newsEntry.render();
-const newsDate = newsEntry.data.date;
+const newsDate = newsEntry.data.publishedDate;
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
