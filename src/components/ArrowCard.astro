@@ -15,7 +15,7 @@ const { entry } = Astro.props;
       {entry.data.title}
     </div>
     <div class="text-xs flex items-center gap-1 opacity-70 my-1">
-      <span>Published: <FormattedDate date={entry.data.publishedDate: } /></span>
+      <span>Published: <FormattedDate date={entry.data.publishedDate} /></span>
       {entry.data.updatedDate && (
         <>
           <span>/</span>
