@@ -14,11 +14,11 @@ const { entry } = Astro.props;
     <div class="font-semibold">
       {entry.data.title}
     </div>
-    <div class="text-xs flex items-center gap-1.5 opacity-70 my-1">
-      <FormattedDate date={entry.data.date} />
+    <div class="text-xs flex items-center gap-1 opacity-70 my-1">
+      <span>Published: <FormattedDate date={entry.data.date} /></span>
       {entry.data.updatedDate && (
         <>
-          <span>&bull;</span>
+          <span>/</span>
           <span>Updated: <FormattedDate date={entry.data.updatedDate} /></span>
         </>
       )}
