@@ -8,8 +8,8 @@ import { PROJECTS } from "@consts";
 const projects = (await getCollection("projects"))
   .filter(project => !project.data.draft)
   .sort((a, b) => {
-    const aDate = a.data.updatedDate ?? a.data.date;
-    const bDate = b.data.updatedDate ?? b.data.date;
+    const aDate = a.data.updatedDate ?? a.data.publishedDate;
+    const bDate = b.data.updatedDate ?? b.data.publishedDate;
     return bDate.valueOf() - aDate.valueOf();
   });
 ---
