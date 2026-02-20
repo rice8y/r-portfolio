@@ -5,7 +5,7 @@ const blog = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    date: z.coerce.date(),
+    publishedDate: z.coerce.date(),
     draft: z.boolean().optional()
   }),
 });
@@ -42,7 +42,7 @@ const projects = defineCollection({
 const news = {
   type: "content",
   schema: z.object({
-    date: z.coerce.date().optional(),
+    publishedDate: z.coerce.date().optional(),
   }),
 };
 
@@ -51,7 +51,7 @@ const favorites = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    date: z.coerce.date(),
+    publishedDate: z.coerce.date(),
     draft: z.boolean().optional(),
   }),
 });
