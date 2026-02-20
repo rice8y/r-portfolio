@@ -11,8 +11,8 @@ export async function getStaticPaths() {
   const projects = (await getCollection("projects"))
     .filter(post => !post.data.draft)
     .sort((a, b) => {
-      const aDate = a.data.updatedDate ?? a.data.date;
-      const bDate = b.data.updatedDate ?? b.data.date;
+      const aDate = a.data.updatedDate ?? a.data.publishedDate;
+      const bDate = b.data.updatedDate ?? b.data.publishedDate;
       return bDate.valueOf() - aDate.valueOf();
     });
   return projects.map((project) => ({
@@ -49,7 +49,7 @@ if (project.data.customLinks) {
     <div class="space-y-1 my-10">
       <div class="animate flex items-center gap-1.5">
         <div class="font-base text-sm flex items-center gap-1">
-          <span>Published: <FormattedDate date={project.data.date} /></span>
+          <span>Published: <FormattedDate date={project.data.publishedDate} /></span>
           {project.data.updatedDate && (
             <>
               <span>/</span>
