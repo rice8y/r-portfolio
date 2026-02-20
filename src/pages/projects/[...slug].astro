@@ -10,7 +10,11 @@ import Link from "@components/Link.astro";
 export async function getStaticPaths() {
   const projects = (await getCollection("projects"))
     .filter(post => !post.data.draft)
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+    .sort((a, b) => {
+      const aDate = a.data.updatedDate ?? a.data.date;
+      const bDate = b.data.updatedDate ?? b.data.date;
+      return bDate.valueOf() - aDate.valueOf();
+    });
   return projects.map((project) => ({
     params: { slug: project.slug },
     props: project,
@@ -44,8 +48,14 @@ if (project.data.customLinks) {
     </div>
     <div class="space-y-1 my-10">
       <div class="animate flex items-center gap-1.5">
-        <div class="font-base text-sm">
-          <FormattedDate date={project.data.date} />
+        <div class="font-base text-sm flex items-center gap-1">
+          <span>Published: <FormattedDate date={project.data.date} /></span>
+          {project.data.updatedDate && (
+            <>
+              <span>/</span>
+              <span>Updated: <FormattedDate date={project.data.updatedDate} /></span>
+            </>
+          )}
         </div>
         &bull;
         <div class="font-base text-sm">
