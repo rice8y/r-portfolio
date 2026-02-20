@@ -8,7 +8,11 @@ import { FAVORITES } from "@consts";
 const favorites = (await getCollection("favorites"))
   .filter(f => !f.data.draft)
   .filter(f => f.id.split("/").length === 2)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  .sort((a, b) => {
+    const aDate = a.data.updatedDate ?? a.data.publishedDate;
+    const bDate = b.data.updatedDate ?? b.data.publishedDate;
+    return bDate.valueOf() - aDate.valueOf();
+  });
 ---
 
 <PageLayout title={FAVORITES.TITLE} description={FAVORITES.DESCRIPTION}>
