@@ -9,12 +9,17 @@ import BackToPrev from "@components/BackToPrev.astro";
 export async function getStaticPaths() {
   const posts = (await getCollection("blog"))
     .filter(post => !post.data.draft)
-    .sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf());
+    .sort((a, b) => {
+      const aDate = a.data.updatedDate ?? a.data.publishedDate;
+      const bDate = b.data.updatedDate ?? b.data.publishedDate;
+      return bDate.valueOf() - aDate.valueOf();
+    });
   return posts.map((post) => ({
     params: { slug: post.slug },
     props: post,
   }));
 }
+
 type Props = CollectionEntry<"blog">;
 
 const post = Astro.props;
@@ -45,5 +50,23 @@ const { Content } = await post.render();
     <article class="animate">
       <Content />
     </article>
+
+    <div class="animate mt-14">
+      <script is:inline src="https://giscus.app/client.js"
+        data-repo="rice8y/r-portfolio"
+        data-repo-id="R_kgDOPmTTJw"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOPmTTJ84C25yk"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="ja"
+        crossorigin="anonymous"
+        async>
+      </script>
+    </div>
   </Container>
 </PageLayout>
