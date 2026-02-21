@@ -4,35 +4,22 @@ import { SITE } from "@consts";
 import BackToTop from "@components/BackToTop.astro";
 ---
 
-<footer class="animate">
+<footer class="animate relative z-50">
   <Container>
     <div class="relative">
       <div class="absolute right-0 -top-20">
         <BackToTop />
       </div>
     </div>
-    <div class="flex justify-between items-center">
-      <div>
-        &copy; 2026 {`|`} <span id="tex-trigger" class="cursor-pointer">{SITE.NAME}</span>
+    
+    <div class="relative flex items-start min-h-[32px]">
+      <div class="pr-32 break-words">
+        &copy; 2026 {`|`} <span id="collapse-trigger" class="cursor-pointer hover:text-red-500 transition-colors duration-200">{SITE.NAME}</span>
       </div>
-      <div class="flex flex-wrap gap-1 items-center">
-        <button
-          id="light-theme-button"
-          aria-label="Light theme"
-          class="group size-8 flex items-center justify-center rounded-full"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="group-hover:stroke-black group-hover:dark:stroke-white transition-colors duration-300 ease-in-out"
-          >
+      
+      <div class="absolute right-0 top-0 flex flex-wrap gap-1 items-center collapse-target">
+        <button id="light-theme-button" aria-label="Light theme" class="group size-8 flex items-center justify-center rounded-full bg-white/10 dark:bg-black/10 backdrop-blur-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:stroke-black group-hover:dark:stroke-white transition-colors duration-300 ease-in-out">
             <circle cx="12" cy="12" r="5"></circle>
             <line x1="12" y1="1" x2="12" y2="3"></line>
             <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -44,43 +31,13 @@ import BackToTop from "@components/BackToTop.astro";
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
           </svg>
         </button>
-        <button
-          id="dark-theme-button"
-          aria-label="Dark theme"
-          class="group size-8 flex items-center justify-center rounded-full"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="group-hover:stroke-black group-hover:dark:stroke-white transition-colors duration-300 ease-in-out"
-          >
+        <button id="dark-theme-button" aria-label="Dark theme" class="group size-8 flex items-center justify-center rounded-full bg-white/10 dark:bg-black/10 backdrop-blur-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:stroke-black group-hover:dark:stroke-white transition-colors duration-300 ease-in-out">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
           </svg>
         </button>
-        <button
-          id="system-theme-button"
-          aria-label="System theme"
-          class="group size-8 flex items-center justify-center rounded-full"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="group-hover:stroke-black group-hover:dark:stroke-white transition-colors duration-300 ease-in-out"
-          >
+        <button id="system-theme-button" aria-label="System theme" class="group size-8 flex items-center justify-center rounded-full bg-white/10 dark:bg-black/10 backdrop-blur-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:stroke-black group-hover:dark:stroke-white transition-colors duration-300 ease-in-out">
             <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
             <line x1="8" y1="21" x2="16" y2="21"></line>
             <line x1="12" y1="17" x2="12" y2="21"></line>
@@ -90,66 +47,122 @@ import BackToTop from "@components/BackToTop.astro";
     </div>
   </Container>
 
-  <style>
-    .catcode-corrupted {
-      font-family: "Courier New", Courier, monospace;
-      letter-spacing: -1px;
-      word-spacing: 5px;
-      color: #e11d48;
-    }
-    .catcode-corrupted .math-mode {
-      font-family: "Times New Roman", Times, serif;
-      font-style: italic;
-    }
-  </style>
+  <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
-      const trigger = document.getElementById('tex-trigger');
-      if (!trigger) return;
+      const trigger = document.getElementById('collapse-trigger');
+      if (!trigger || typeof Matter === 'undefined') return;
 
-      let clickCount = 0;
-      const initialText = trigger.innerText.trim();
-
-      const expansions = [
-        initialText,
-        `\\expandafter\\csname ${initialText}\\endcsname`,
-        `\\expandafter\\expandafter\\expandafter\\def\\csname ${initialText}\\endcsname{\\relax}`,
-        `\\toks0={\\expandafter\\noexpand\\csname ${initialText}\\endcsname}\\edef\\x{\\the\\toks0}\\x`,
-        `\\let\\bgroup={\\let\\egroup=}\\catcode\`\\~=13 \\def~{\\penalty10000\\ }\\expandafter\\ifx\\csname ${initialText}\\endcsname\\relax\\else\\csname ${initialText}\\endcsname\\fi`
-      ];
+      let isCollapsing = false;
 
       trigger.addEventListener('click', (e) => {
         e.preventDefault();
-        clickCount++;
-
-        if (clickCount < expansions.length) {
-          trigger.innerText = expansions[clickCount];
-          
-          if (clickCount >= 2) {
-            trigger.classList.add('catcode-corrupted');
-            trigger.innerHTML = expansions[clickCount].replace(/ /g, '<span class="math-mode">~</span>');
-          }
-        } else if (clickCount >= expansions.length && clickCount < expansions.length + 3) {
-          let currentText = trigger.innerText;
-          trigger.innerText = currentText + currentText.substring(0, 50) + "\\expandafter";
-        } else {
-          document.body.innerHTML = `
-            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; background-color: white; color: black; font-family: monospace; font-size: 1.2rem; margin: 0; padding: 0;">
-              <div>
-                ! TeX capacity exceeded, sorry [main memory size=3000000].<br>
-                \\x ->\\x \\x<br>
-                <br>
-                l.1 \\x<br>
-                <br>
-                If you really absolutely need more capacity,<br>
-                you can ask a wizard to enlarge me.
-              </div>
-            </div>
-          `;
-          document.body.style.overflow = 'hidden';
-        }
+        if (isCollapsing) return;
+        isCollapsing = true;
+        
+        trigger.style.color = "red";
+        trigger.style.pointerEvents = "none";
+        
+        startCollapse();
       });
+
+      function startCollapse() {
+        const { Engine, Runner, Bodies, Composite, Body, Events } = Matter;
+        
+        const engine = Engine.create();
+        const world = engine.world;
+        engine.gravity.y = 1.0; 
+
+        const allElements = Array.from(document.body.querySelectorAll('*'));
+        
+        let visualElements = allElements.filter(el => {
+          if (['SCRIPT', 'STYLE', 'HEAD', 'META', 'LINK', 'NOSCRIPT'].includes(el.tagName)) return false;
+          if (el.closest('svg') && el.tagName !== 'svg') return false; 
+
+          const rect = el.getBoundingClientRect();
+          if (rect.width === 0 || rect.height === 0) return false;
+
+          const comp = window.getComputedStyle(el);
+          if (comp.visibility === 'hidden' || comp.opacity === '0' || comp.display === 'none') return false;
+
+          const hasText = Array.from(el.childNodes).some(n => n.nodeType === 3 && n.nodeValue.trim() !== '');
+          if (hasText) return true;
+
+          if (['IMG', 'SVG', 'BUTTON', 'HR', 'IFRAME', 'CANVAS', 'VIDEO'].includes(el.tagName)) return true;
+
+          if (comp.backgroundColor !== 'rgba(0, 0, 0, 0)' && comp.backgroundColor !== 'transparent') return true;
+          if (comp.borderWidth !== '0px' && comp.borderStyle !== 'none') return true;
+          if (comp.boxShadow !== 'none') return true;
+
+          return false;
+        });
+
+        let dropTargets = visualElements.filter(el => {
+          let parent = el.parentElement;
+          while (parent && parent !== document.body) {
+            if (visualElements.includes(parent)) return false;
+            parent = parent.parentElement;
+          }
+          return true;
+        });
+
+        const targetData = dropTargets.map(el => {
+          return { el, rect: el.getBoundingClientRect() };
+        });
+
+        document.body.style.width = `${document.body.clientWidth}px`;
+        document.body.style.height = `${document.body.scrollHeight}px`;
+        document.body.style.overflow = "hidden";
+
+        const bodiesData = [];
+
+        targetData.forEach(({ el, rect }) => {
+          document.body.appendChild(el);
+  
+          el.style.position = 'fixed';
+          el.style.left = `${rect.left}px`;
+          el.style.top = `${rect.top}px`;
+          el.style.width = `${rect.width}px`;
+          el.style.height = `${rect.height}px`;
+          
+          el.style.boxSizing = 'border-box';
+          el.style.maxWidth = 'none';
+          el.style.maxHeight = 'none';
+          el.style.margin = '0';
+          el.style.transition = 'none'; 
+          el.style.zIndex = '9999';
+
+          const body = Bodies.rectangle(
+            rect.left + rect.width / 2,
+            rect.top + rect.height / 2,
+            rect.width,
+            rect.height,
+            {
+              collisionFilter: { group: -1 },
+              frictionAir: 0.005 + Math.random() * 0.02, 
+              density: 0.001
+            }
+          );
+          
+          Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.03);
+
+          bodiesData.push({ body, el, initialLeft: rect.left, initialTop: rect.top, w: rect.width, h: rect.height });
+        });
+
+        Composite.add(world, bodiesData.map(d => d.body));
+
+        const runner = Runner.create();
+        Runner.run(runner, engine);
+
+        Events.on(engine, 'afterUpdate', () => {
+          bodiesData.forEach(({ body, el, initialLeft, initialTop, w, h }) => {
+            const dx = body.position.x - (initialLeft + w / 2);
+            const dy = body.position.y - (initialTop + h / 2);
+            el.style.transform = `translate(${dx}px, ${dy}px) rotate(${body.angle}rad)`;
+          });
+        });
+      }
     });
   </script>
 </footer>
