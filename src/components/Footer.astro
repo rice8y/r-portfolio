@@ -13,7 +13,7 @@ import BackToTop from "@components/BackToTop.astro";
     </div>
     <div class="flex justify-between items-center">
       <div>
-        &copy; 2026 {`|`} {SITE.NAME}
+        &copy; 2026 {`|`} <span id="tex-trigger" class="cursor-pointer">{SITE.NAME}</span>
       </div>
       <div class="flex flex-wrap gap-1 items-center">
         <button
@@ -89,4 +89,67 @@ import BackToTop from "@components/BackToTop.astro";
       </div>
     </div>
   </Container>
+
+  <style>
+    .catcode-corrupted {
+      font-family: "Courier New", Courier, monospace;
+      letter-spacing: -1px;
+      word-spacing: 5px;
+      color: #e11d48;
+    }
+    .catcode-corrupted .math-mode {
+      font-family: "Times New Roman", Times, serif;
+      font-style: italic;
+    }
+  </style>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const trigger = document.getElementById('tex-trigger');
+      if (!trigger) return;
+
+      let clickCount = 0;
+      const initialText = trigger.innerText.trim();
+
+      const expansions = [
+        initialText,
+        `\\expandafter\\csname ${initialText}\\endcsname`,
+        `\\expandafter\\expandafter\\expandafter\\def\\csname ${initialText}\\endcsname{\\relax}`,
+        `\\toks0={\\expandafter\\noexpand\\csname ${initialText}\\endcsname}\\edef\\x{\\the\\toks0}\\x`,
+        `\\let\\bgroup={\\let\\egroup=}\\catcode\`\\~=13 \\def~{\\penalty10000\\ }\\expandafter\\ifx\\csname ${initialText}\\endcsname\\relax\\else\\csname ${initialText}\\endcsname\\fi`
+      ];
+
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        clickCount++;
+
+        if (clickCount < expansions.length) {
+          trigger.innerText = expansions[clickCount];
+          
+          if (clickCount >= 2) {
+            trigger.classList.add('catcode-corrupted');
+            trigger.innerHTML = expansions[clickCount].replace(/ /g, '<span class="math-mode">~</span>');
+          }
+        } else if (clickCount >= expansions.length && clickCount < expansions.length + 3) {
+          let currentText = trigger.innerText;
+          trigger.innerText = currentText + currentText.substring(0, 50) + "\\expandafter";
+        } else {
+          document.body.innerHTML = `
+            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; background-color: white; color: black; font-family: monospace; font-size: 1.2rem; margin: 0; padding: 0;">
+              <div>
+                ! TeX capacity exceeded, sorry [main memory size=3000000].<br>
+                \\x ->\\x \\x<br>
+                <br>
+                l.1 \\x<br>
+                <br>
+                If you really absolutely need more capacity,<br>
+                you can ask a wizard to enlarge me.
+              </div>
+            </div>
+          `;
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    });
+  </script>
 </footer>
