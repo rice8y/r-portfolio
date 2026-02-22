@@ -50,9 +50,11 @@ import BackToTop from "@components/BackToTop.astro";
   <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 
   <script is:inline>
-    document.addEventListener('DOMContentLoaded', () => {
+    function initCollapse() {
       const trigger = document.getElementById('collapse-trigger');
       if (!trigger || typeof Matter === 'undefined') return;
+      if (trigger.dataset.collapseReady) return;
+      trigger.dataset.collapseReady = 'true';
 
       let isCollapsing = false;
 
@@ -72,13 +74,13 @@ import BackToTop from "@components/BackToTop.astro";
         
         const engine = Engine.create();
         const world = engine.world;
-        engine.gravity.y = 1.0; 
+        engine.gravity.y = 1.0;
 
         const allElements = Array.from(document.body.querySelectorAll('*'));
         
         let visualElements = allElements.filter(el => {
           if (['SCRIPT', 'STYLE', 'HEAD', 'META', 'LINK', 'NOSCRIPT'].includes(el.tagName)) return false;
-          if (el.closest('svg') && el.tagName !== 'svg') return false; 
+          if (el.closest('svg') && el.tagName !== 'svg') return false;
 
           const rect = el.getBoundingClientRect();
           if (rect.width === 0 || rect.height === 0) return false;
@@ -130,7 +132,7 @@ import BackToTop from "@components/BackToTop.astro";
           el.style.maxWidth = 'none';
           el.style.maxHeight = 'none';
           el.style.margin = '0';
-          el.style.transition = 'none'; 
+          el.style.transition = 'none';
           el.style.zIndex = '9999';
 
           const body = Bodies.rectangle(
@@ -140,7 +142,7 @@ import BackToTop from "@components/BackToTop.astro";
             rect.height,
             {
               collisionFilter: { group: -1 },
-              frictionAir: 0.005 + Math.random() * 0.02, 
+              frictionAir: 0.005 + Math.random() * 0.02,
               density: 0.001
             }
           );
@@ -163,6 +165,9 @@ import BackToTop from "@components/BackToTop.astro";
           });
         });
       }
-    });
+    }
+
+    document.addEventListener('DOMContentLoaded', initCollapse);
+    document.addEventListener('astro:page-load', initCollapse);
   </script>
 </footer>
