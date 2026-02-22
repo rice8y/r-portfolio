@@ -52,7 +52,14 @@ const favorites = defineCollection({
     title: z.string(),
     description: z.string(),
     publishedDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
     draft: z.boolean().optional(),
+    customLinks: z.array(
+      z.object({
+        label: z.string(),
+        url: z.string().url()
+      })
+    ).optional(),
   }),
 });
 
