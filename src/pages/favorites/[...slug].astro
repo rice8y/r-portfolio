@@ -10,7 +10,11 @@ import Link from "@components/Link.astro";
 export async function getStaticPaths() {
   const favorites = (await getCollection("favorites"))
     .filter(post => !post.data.draft)
-    .sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf());
+    .sort((a, b) => {
+      const aDate = a.data.updatedDate ?? a.data.publishedDate;
+      const bDate = b.data.updatedDate ?? b.data.publishedDate;
+      return bDate.valueOf() - aDate.valueOf();
+    });
   return favorites.map((favorite) => ({
     params: { slug: favorite.slug },
     props: favorite,
@@ -20,6 +24,19 @@ type Props = CollectionEntry<"favorites">;
 
 const favorite = Astro.props;
 const { Content } = await favorite.render();
+
+const links = [];
+if (favorite.data.demoURL) {
+  links.push({ url: favorite.data.demoURL, label: "demo" });
+}
+if (favorite.data.repoURL) {
+  links.push({ url: favorite.data.repoURL, label: "GitHub" });
+}
+if (favorite.data.customLinks) {
+  favorite.data.customLinks.forEach((link) => {
+    links.push({ url: link.url, label: link.label });
+  });
+}
 ---
 
 <PageLayout title={favorite.data.title} description={favorite.data.description}>
@@ -31,8 +48,14 @@ const { Content } = await favorite.render();
     </div>
     <div class="space-y-1 my-10">
       <div class="animate flex items-center gap-1.5">
-        <div class="font-base text-sm">
-          <FormattedDate date={favorite.data.publishedDate} />
+        <div class="font-base text-sm flex items-center gap-1">
+          <span>Published: <FormattedDate date={favorite.data.publishedDate} /></span>
+          {favorite.data.updatedDate && (
+            <>
+              <span>/</span>
+              <span>Updated: <FormattedDate date={favorite.data.updatedDate} /></span>
+            </>
+          )}
         </div>
         &bull;
         <div class="font-base text-sm">
@@ -42,21 +65,18 @@ const { Content } = await favorite.render();
       <div class="animate text-2xl font-semibold text-black dark:text-white">
         {favorite.data.title}
       </div>
-      {(favorite.data.demoURL || favorite.data.repoURL) && (
+      {links.length > 0 && (
         <nav class="animate flex gap-1">
-          {favorite.data.demoURL && (
-            <Link href={favorite.data.demoURL} external>
-              demo
-            </Link>
-          )}
-          {favorite.data.demoURL && favorite.data.repoURL && (
-            <span>/</span>
-          )}
-          {favorite.data.repoURL && (
-            <Link href={favorite.data.repoURL} external>
-              repo
-            </Link>
-          )}
+          {links.map((link, index) => (
+            <>
+              <Link href={link.url} external>
+                {link.label}
+              </Link>
+              {index < links.length - 1 && (
+                <span>/</span>
+              )}
+            </>
+          ))}
         </nav>
       )}
     </div>
