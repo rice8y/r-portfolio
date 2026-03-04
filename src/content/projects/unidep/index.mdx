@@ -1,8 +1,9 @@
 ---
-title: "conllu-tree"
+title: "unidep"
 publishedDate: "2026/02/27"
+updatedDate: "2026/03/04"
 description: "A fast, beautiful, and highly customizable Typst package for rendering Universal Dependencies (CoNLL-U) trees, powered by Rust/WASM and CeTZ."
-repoURL: "https://github.com/rice8y/conllu-tree"
+repoURL: "https://github.com/rice8y/unidep"
 ---
 
 A fast, beautiful, and highly customizable Typst package for rendering Universal Dependencies (CoNLL-U) trees, powered by Rust/WASM and [CeTZ](https://github.com/johannes-wolf/cetz).
@@ -14,7 +15,7 @@ This package provides an elegant way to visualize dependency parsing results, sy
 Import the package and use the `dependency-tree` function. Pass your CoNLL-U text to it.
 
 ````typ
-#import "@preview/conllu-tree:0.1.0": dependency-tree
+#import "@preview/unidep:0.1.0": dependency-tree
 #set page(width: auto, height: auto, margin: 3mm)
 
 #let sample-conllu = ```
@@ -31,7 +32,7 @@ Import the package and use the `dependency-tree` function. Pass your CoNLL-U tex
 #dependency-tree(sample-conllu)
 ````
 
-![Basic Tree](/images/projects/conllu-tree/ex01.png)
+![Basic Tree](/images/projects/unidep/ex01.png)
 
 ## Advanced Usage & Highlighting
 
@@ -52,7 +53,7 @@ You can display the original sentence text, lemmas, and part-of-speech tags (UPO
 )
 ```
 
-![Advanced Tree](/images/projects/conllu-tree/ex02.png)
+![Advanced Tree](/images/projects/unidep/ex02.png)
 
 ## API Reference
 
@@ -80,4 +81,4 @@ Renders one or more sentences from a CoNLL-U formatted string.
 
 ## License
 
-This project is distributed under the MIT License. See [LICENSE](https://raw.githubusercontent.com/rice8y/conllu-tree/main/LICENSE) for details.
+This project is distributed under the MIT License. See [LICENSE](https://raw.githubusercontent.com/rice8y/unidep/main/LICENSE) for details.
