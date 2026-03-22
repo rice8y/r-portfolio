@@ -25,24 +25,56 @@ const favorites = (await getCollection("favorites"))
 const awardEntry = await getEntryBySlug("awards", "index");
 const { Content: AwardContent } = await awardEntry.render();
 
+const publicationEntry = await getEntryBySlug("publications", "index");
+const { Content: PublicationContent } = await publicationEntry.render();
+
 const newsEntry = await getEntryBySlug("news", "index");
 const { Content: NewsContent } = await newsEntry.render();
 const newsDate = newsEntry.data.publishedDate;
+
+const lang = Astro.currentLocale || "ja";
+
+const aboutT = {
+  ja: {
+    nameLabel: "氏名:",
+    name: "米山 瑛人",
+    affiliationLabel: "所属:",
+    affiliation: "愛媛大学工学部工学科コンピュータ科学コース 自然言語処理研究室",
+    gradeLabel: "学年:",
+    grade: "学部4年",
+  },
+  en: {
+    nameLabel: "Name:",
+    name: "Eito Yoneyama",
+    affiliationLabel: "Affiliation:",
+    affiliation: "NLP Lab, Computer Science Course, Faculty of Engineering, Ehime University",
+    gradeLabel: "Grade:",
+    grade: "Undergraduate (B4)",
+  }
+};
+
+const t = aboutT[lang as keyof typeof aboutT] || aboutT.ja;
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <Container>
-    <h4 class="animate font-semibold text-black dark:text-white">
+    <h2 class="font-semibold text-3xl leading-tight tracking-tight text-black dark:text-white">
       About me
-    </h4>
+    </h2>
     <div class="space-y-16">
       <!-- About -->
       <section>
         <article class="space-y-4">
-          <p class="animate">
-            <b>氏名:</b> 米山 瑛人 (Eito Yoneyama)<br>
-            <b>所属:</b> 愛媛大学工学部工学科コンピュータ科学コース 自然言語処理研究室<br>
-            <b>学年:</b> 学部4年
+          <p class="animate lang-ja block">
+            <b>{aboutT.ja.nameLabel}</b> {aboutT.ja.name}<br>
+            <b>{aboutT.ja.affiliationLabel}</b> {aboutT.ja.affiliation}<br>
+            <b>{aboutT.ja.gradeLabel}</b> {aboutT.ja.grade}
+          </p>
+          
+          <p class="animate lang-en hidden">
+            <b>{aboutT.en.nameLabel}</b> {aboutT.en.name}<br>
+            <b>{aboutT.en.affiliationLabel}</b> {aboutT.en.affiliation}<br>
+            <b>{aboutT.en.gradeLabel}</b> {aboutT.en.grade}
           </p>
         </article>
       </section>
@@ -74,7 +106,7 @@ const newsDate = newsEntry.data.publishedDate;
       <!-- Latest posts -->
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">
+          <h5 class="font-semibold text-2xl leading-tight tracking-tight text-black dark:text-white">
             Latest posts
           </h5>
           <Link href="/blog">
@@ -93,7 +125,7 @@ const newsDate = newsEntry.data.publishedDate;
       <!-- Recent projects -->
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">
+          <h5 class="font-semibold text-2xl leading-tight tracking-tight text-black dark:text-white">
             Recent projects
           </h5>
           <Link href="/projects">
@@ -112,18 +144,30 @@ const newsDate = newsEntry.data.publishedDate;
       <!-- Awards -->
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">
+          <h5 class="font-semibold text-2xl leading-tight tracking-tight text-black dark:text-white">
             Awards
           </h5>
         </div>
-        <article class="prose dark:prose-invert">
+        <article class="prose dark:prose-invert prose-h3:text-base prose-h3:font-semibold">
           <AwardContent />
+        </article>
+      </section>
+
+      <!-- Publications -->
+      <section class="animate space-y-6">
+        <div class="flex flex-wrap gap-y-2 items-center justify-between">
+          <h5 class="font-semibold text-2xl leading-tight tracking-tight text-black dark:text-white">
+            Publications
+          </h5>
+        </div>
+        <article class="prose dark:prose-invert prose-h3:text-base prose-h3:font-semibold">
+          <PublicationContent />
         </article>
       </section>
 
       <!-- Contact -->
       <section class="animate space-y-4">
-        <h5 class="font-semibold text-black dark:text-white">
+        <h5 class="font-semibold text-2xl leading-tight tracking-tight text-black dark:text-white">
           Contact
         </h5>
         <ul class="flex flex-wrap gap-2">
@@ -154,3 +198,17 @@ const newsDate = newsEntry.data.publishedDate;
     </div>
   </Container>
 </PageLayout>
+
+<script>
+  const userLang = navigator.language || navigator.userLanguage;
+
+  if (userLang.startsWith('en')) {
+    const jaElement = document.querySelector('.lang-ja');
+    const enElement = document.querySelector('.lang-en');
+    
+    if (jaElement && enElement) {
+      jaElement.classList.replace('block', 'hidden');
+      enElement.classList.replace('hidden', 'block');
+    }
+  }
+</script>

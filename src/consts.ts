@@ -19,9 +19,14 @@ export const BLOG: Metadata = {
   DESCRIPTION: "A collection of articles on topics I am passionate about.",
 };
 
-export const WORK: Metadata = {
+export const AWARD: Metadata = {
   TITLE: "Awards",
   DESCRIPTION: "A showcase of my experiences and achievements.",
+};
+
+export const PUBLICATION: Metadata = {
+  TITLE: "Publications",
+  DESCRIPTION: "A showcase of my publications and research work.",
 };
 
 export const PROJECTS: Metadata = {

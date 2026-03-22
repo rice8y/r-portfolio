@@ -10,7 +10,17 @@ const blog = defineCollection({
   }),
 });
 
-const work = defineCollection({
+const award = defineCollection({
+  type: "content",
+  schema: z.object({
+    company: z.string(),
+    role: z.string(),
+    dateStart: z.coerce.date(),
+    dateEnd: z.union([z.coerce.date(), z.string()]),
+  }),
+});
+
+const publication = defineCollection({
   type: "content",
   schema: z.object({
     company: z.string(),
@@ -63,4 +73,4 @@ const favorites = defineCollection({
   }),
 });
 
-export const collections = { blog, work, projects, news, favorites };
+export const collections = { blog, award, publication, projects, news, favorites };
